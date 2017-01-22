@@ -28,6 +28,7 @@ class Config implements \ArrayAccess
         'nextras.orm.class.entity' => 'Nextras\Orm\Entity\Entity',
         'nextras.orm.class.repository' => 'Nextras\Orm\Repository\Repository',
         'nextras.orm.class.mapper' => 'Nextras\Orm\Mapper\Mapper',
+    	'nextras.orm.class.collection' => 'Nextras\Orm\Collection\ICollection',
         // ORM
         'orm.namespace' => NULL,
         // Entity

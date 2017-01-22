@@ -11,12 +11,16 @@ use Minetro\Normgen\Generator\Entity\Decorator\IDecorator;
 use Minetro\Normgen\Resolver\IEntityResolver;
 use Nette\PhpGenerator\Helpers;
 use Nette\PhpGenerator\PhpNamespace;
+use Minetro\Normgen\Resolver\IRepositoryResolver;
 
 class EntityGenerator extends AbstractGenerator
 {
 
     /** @var IEntityResolver */
     private $resolver;
+    
+    /** @var IRepositoryResolver */
+    private $repositoryResolver;
 
     /** @var IDecorator[] */
     private $decorators = [];
@@ -24,13 +28,15 @@ class EntityGenerator extends AbstractGenerator
     /**
      * @param Config $config
      * @param IEntityResolver $resolver
+     * @param IRepositoryResolver $repositoryResolver
      */
-    function __construct(Config $config, IEntityResolver $resolver)
+    function __construct(Config $config, IEntityResolver $resolver, IRepositoryResolver $repositoryResolver)
     {
         parent::__construct($config);
 
         $this->resolver = $resolver;
-
+		$this->repositoryResolver = $repositoryResolver;
+        
         $this->decorators[] = new ColumnMapper();
         $this->decorators[] = new ColumnDocumentor($resolver);
     }
@@ -81,6 +87,9 @@ class EntityGenerator extends AbstractGenerator
                     $decorator->doDecorate($column, $class, $namespace);
                 }
             }
+            
+            $repositoryName = $this->repositoryResolver->resolveRepositoryName($table);
+            $class->addDocument("@method $repositoryName getRepository(" . '$need' . " = true)");
 
             // Save file
             $this->generateFile($this->resolver->resolveEntityFilename($table), (string)$namespace);

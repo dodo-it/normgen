@@ -9,6 +9,7 @@ use Minetro\Normgen\Resolver\IRepositoryResolver;
 use Nette\PhpGenerator\Helpers;
 use Nette\PhpGenerator\PhpNamespace;
 use Minetro\Normgen\Resolver\IEntityResolver;
+use Minetro\Normgen\Resolver\IMapperResolver;
 
 class RepositoryGenerator extends AbstractGenerator
 {
@@ -18,18 +19,23 @@ class RepositoryGenerator extends AbstractGenerator
     
     /** @var IEntityResolver */
     private $entityResolver;
+    
+    /** @var IMapperResolver */
+    private $mapperResolver;
 
     /**
      * @param Config $config
      * @param IRepositoryResolver $resolver
      * @param IEntityResolver $entityResolver
+     * @param IMapperResolver $mapperResolver
      */
-    function __construct(Config $config, IRepositoryResolver $resolver, IEntityResolver $entityResolver)
+    function __construct(Config $config, IRepositoryResolver $resolver, IEntityResolver $entityResolver, IMapperResolver $mapperResolver)
     {
         parent::__construct($config);
 
         $this->resolver = $resolver;
         $this->entityResolver = $entityResolver;
+        $this->mapperResolver = $mapperResolver;
     }
 
     /**
@@ -47,13 +53,31 @@ class RepositoryGenerator extends AbstractGenerator
                 $namespace->addUse($extends);
                 $class->setExtends($extends);
             }
-
+            
             $entityName = $this->entityResolver->resolveEntityName($table);
             $class->addMethod("getEntityClassNames")
 				->addDocument("@return array")
 				->setVisibility('public')
 				->setStatic(true)
 				->addBody("return [$entityName::class];");
+            
+			$mapperName = $this->mapperResolver->resolveMapperName($table);
+			$collection = $this->config->get('nextras.orm.class.collection');
+			$namespace->addUse($collection);
+			
+			$class->addDocument("@method $mapperName getMapper()");
+			$class->addDocument("@method $entityName hydrateEntity(array " . '$data' . ")");
+			$class->addDocument("@method $entityName attach($entityName " . '$entity' . ")");
+			$class->addDocument("@method void detach($entityName " . '$entity' . ")");
+			$class->addDocument("@method $entityName|NULL getBy(array " . '$conds' . ")");
+			$class->addDocument("@method $entityName|NULL getById(" . '$primaryValue' . ")");
+			$class->addDocument("@method ICollection|" . $entityName . "[] findAll()");
+			$class->addDocument("@method ICollection|" . $entityName . "[] findBy(array " . '$where' . ")");
+			$class->addDocument("@method ICollection|" . $entityName . "[] findById(" . '$primaryValues' . ")");
+			$class->addDocument("@method $entityName|NULL persist($entityName " . '$entity'. ", " . '$withCascade' . " = true)");
+			$class->addDocument("@method $entityName|NULL persistAndFlush($entityName " . '$entity'. ", " . '$withCascade' . " = true)");
+			$class->addDocument("@method $entityName remove($entityName|mixed " . '$entity'. ", " . '$withCascade' . " = true)");
+			$class->addDocument("@method $entityName removeAndFlush($entityName|mixed " . '$entity'. ", " . '$withCascade' . " = true)");
             
             // Save file
             $this->generateFile($this->resolver->resolveRepositoryFilename($table), (string)$namespace);

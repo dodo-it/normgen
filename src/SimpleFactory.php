@@ -46,8 +46,8 @@ final class SimpleFactory
             throw new InvalidStrategyException();
         }
 
-        $normgen->setEntityGenerator(new EntityGenerator($this->config, $resolver));
-        $normgen->setRepositoryGenerator(new RepositoryGenerator($this->config, $resolver, $resolver));
+        $normgen->setEntityGenerator(new EntityGenerator($this->config, $resolver, $resolver));
+        $normgen->setRepositoryGenerator(new RepositoryGenerator($this->config, $resolver, $resolver, $resolver));
         $normgen->setMapperGenerator(new MapperGenerator($this->config, $resolver));
         $normgen->setFacadeGenerator(new FacadeGenerator($this->config, $resolver));
 
