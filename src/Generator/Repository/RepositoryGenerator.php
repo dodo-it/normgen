@@ -64,20 +64,22 @@ class RepositoryGenerator extends AbstractGenerator
 			$mapperName = $this->mapperResolver->resolveMapperName($table);
 			$collection = $this->config->get('nextras.orm.class.collection');
 			$namespace->addUse($collection);
+			$entity = $this->config->get('nextras.orm.class.ientity');
+            $namespace->addUse($entity);
 			
 			$class->addDocument("@method $mapperName getMapper()");
 			$class->addDocument("@method $entityName hydrateEntity(array " . '$data' . ")");
-			$class->addDocument("@method $entityName attach($entityName " . '$entity' . ")");
-			$class->addDocument("@method void detach($entityName " . '$entity' . ")");
+			$class->addDocument("@method $entityName attach(IEntity " . '$entity' . ")");
+			$class->addDocument("@method void detach(IEntity " . '$entity' . ")");
 			$class->addDocument("@method $entityName|NULL getBy(array " . '$conds' . ")");
 			$class->addDocument("@method $entityName|NULL getById(" . '$primaryValue' . ")");
 			$class->addDocument("@method ICollection|" . $entityName . "[] findAll()");
 			$class->addDocument("@method ICollection|" . $entityName . "[] findBy(array " . '$where' . ")");
 			$class->addDocument("@method ICollection|" . $entityName . "[] findById(" . '$primaryValues' . ")");
-			$class->addDocument("@method $entityName|NULL persist($entityName " . '$entity'. ", " . '$withCascade' . " = true)");
-			$class->addDocument("@method $entityName|NULL persistAndFlush($entityName " . '$entity'. ", " . '$withCascade' . " = true)");
-			$class->addDocument("@method $entityName remove($entityName|mixed " . '$entity'. ", " . '$withCascade' . " = true)");
-			$class->addDocument("@method $entityName removeAndFlush($entityName|mixed " . '$entity'. ", " . '$withCascade' . " = true)");
+			$class->addDocument("@method $entityName|NULL persist(IEntity " . '$entity'. ", " . '$withCascade' . " = true)");
+			$class->addDocument("@method $entityName|NULL persistAndFlush(IEntity " . '$entity'. ", " . '$withCascade' . " = true)");
+			$class->addDocument("@method $entityName remove(" . '$entity'. ", " . '$withCascade' . " = true)");
+			$class->addDocument("@method $entityName removeAndFlush(" . '$entity'. ", " . '$withCascade' . " = true)");
             
             // Save file
             $this->generateFile($this->resolver->resolveRepositoryFilename($table), (string)$namespace);

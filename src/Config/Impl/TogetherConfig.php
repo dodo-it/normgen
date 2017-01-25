@@ -23,6 +23,7 @@ class TogetherConfig extends Config
         'nextras.orm.class.repository' => 'Nextras\Orm\Repository\Repository',
         'nextras.orm.class.mapper' => 'Nextras\Orm\Mapper\Mapper',
     	'nextras.orm.class.collection' => 'Nextras\Orm\Collection\ICollection',
+        'nextras.orm.class.ientity' => 'Nextras\Orm\Entity\IEntity',
         // ORM
         'orm.namespace' => 'App\Model',
         // Entity
