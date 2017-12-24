@@ -56,7 +56,7 @@ class RepositoryGenerator extends AbstractGenerator
             
             $entityName = $this->entityResolver->resolveEntityName($table);
             $class->addMethod("getEntityClassNames")
-				->addDocument("@return array")
+				->addComment("@return array")
 				->setVisibility('public')
 				->setStatic(true)
 				->addBody("return [$entityName::class];");
@@ -67,19 +67,19 @@ class RepositoryGenerator extends AbstractGenerator
 			$entity = $this->config->get('nextras.orm.class.ientity');
             $namespace->addUse($entity);
 			
-			$class->addDocument("@method $mapperName getMapper()");
-			$class->addDocument("@method $entityName hydrateEntity(array " . '$data' . ")");
-			$class->addDocument("@method $entityName attach(IEntity " . '$entity' . ")");
-			$class->addDocument("@method void detach(IEntity " . '$entity' . ")");
-			$class->addDocument("@method $entityName|NULL getBy(array " . '$conds' . ")");
-			$class->addDocument("@method $entityName|NULL getById(" . '$primaryValue' . ")");
-			$class->addDocument("@method ICollection|" . $entityName . "[] findAll()");
-			$class->addDocument("@method ICollection|" . $entityName . "[] findBy(array " . '$where' . ")");
-			$class->addDocument("@method ICollection|" . $entityName . "[] findById(" . '$primaryValues' . ")");
-			$class->addDocument("@method $entityName|NULL persist(IEntity " . '$entity'. ", " . '$withCascade' . " = true)");
-			$class->addDocument("@method $entityName|NULL persistAndFlush(IEntity " . '$entity'. ", " . '$withCascade' . " = true)");
-			$class->addDocument("@method $entityName remove(" . '$entity'. ", " . '$withCascade' . " = true)");
-			$class->addDocument("@method $entityName removeAndFlush(" . '$entity'. ", " . '$withCascade' . " = true)");
+			$class->addComment("@method $mapperName getMapper()");
+			$class->addComment("@method $entityName hydrateEntity(array " . '$data' . ")");
+			$class->addComment("@method $entityName attach(IEntity " . '$entity' . ")");
+			$class->addComment("@method void detach(IEntity " . '$entity' . ")");
+			$class->addComment("@method $entityName|NULL getBy(array " . '$conds' . ")");
+			$class->addComment("@method $entityName|NULL getById(" . '$primaryValue' . ")");
+			$class->addComment("@method ICollection|" . $entityName . "[] findAll()");
+			$class->addComment("@method ICollection|" . $entityName . "[] findBy(array " . '$where' . ")");
+			$class->addComment("@method ICollection|" . $entityName . "[] findById(" . '$primaryValues' . ")");
+			$class->addComment("@method $entityName|NULL persist(IEntity " . '$entity'. ", " . '$withCascade' . " = true)");
+			$class->addComment("@method $entityName|NULL persistAndFlush(IEntity " . '$entity'. ", " . '$withCascade' . " = true)");
+			$class->addComment("@method $entityName remove(" . '$entity'. ", " . '$withCascade' . " = true)");
+			$class->addComment("@method $entityName removeAndFlush(" . '$entity'. ", " . '$withCascade' . " = true)");
             
             // Save file
             $this->generateFile($this->resolver->resolveRepositoryFilename($table), (string)$namespace);

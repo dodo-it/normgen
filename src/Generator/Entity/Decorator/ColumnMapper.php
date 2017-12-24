@@ -38,7 +38,7 @@ class ColumnMapper implements IDecorator
 
                 foreach ($column->getEnum() as $enum) {
                     $name = Strings::upper($column->getName()) . '_' . $enum;
-                    $class->addConst($name, $enum);
+                    $class->addConstant($name, $enum);
                 }
 
                 if ($column->getDefault() !== NULL) {

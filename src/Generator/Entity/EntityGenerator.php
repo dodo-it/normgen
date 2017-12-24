@@ -89,7 +89,7 @@ class EntityGenerator extends AbstractGenerator
             }
             
             $repositoryName = $this->repositoryResolver->resolveRepositoryName($table);
-            $class->addDocument("@method $repositoryName getRepository(" . '$need' . " = true)");
+            $class->addComment("@method $repositoryName getRepository(" . '$need' . " = true)");
 
             // Save file
             $this->generateFile($this->resolver->resolveEntityFilename($table), (string)$namespace);
