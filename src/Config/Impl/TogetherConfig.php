@@ -17,19 +17,22 @@ class TogetherConfig extends Config
         'generator.generate.repositories' => TRUE,
         'generator.generate.mappers' => TRUE,
         'generator.generate.facades' => TRUE,
-        'generator.entity.exclude.primary' => TRUE,
+        'generator.entity.exclude.primary' => FALSE,
+	    'generator.generate.model' => TRUE,
         // NextrasORM
         'nextras.orm.class.entity' => 'Nextras\Orm\Entity\Entity',
         'nextras.orm.class.repository' => 'Nextras\Orm\Repository\Repository',
         'nextras.orm.class.mapper' => 'Nextras\Orm\Mapper\Mapper',
     	'nextras.orm.class.collection' => 'Nextras\Orm\Collection\ICollection',
         'nextras.orm.class.ientity' => 'Nextras\Orm\Entity\IEntity',
+	    'nextras.orm.class.model' => 'Nextras\Orm\Model\Model',
         // ORM
         'orm.namespace' => 'App\Model',
+	    'orm.filename.suffix' => 'Orm',
         // Entity
         'entity.folder' => NULL,
         'entity.namespace' => 'App\Model',
-        'entity.extends' => 'App\Model\Entity\AbstractEntity',
+        'entity.extends' => 'App\Model\AbstractEntity',
         'entity.name.suffix' => NULL,
         'entity.filename.suffix' => NULL,
         // Repository

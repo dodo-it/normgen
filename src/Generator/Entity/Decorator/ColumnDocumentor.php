@@ -37,49 +37,55 @@ class ColumnDocumentor implements IDecorator
     {
         $column->setPhpDoc($doc = new PhpDoc());
 
-        // Annotation
-        $doc->setAnnotation('@property');
 
-        // Type
-        if ($column->isNullable()) {
-            $doc->setType($this->getRealType($column) . '|NULL');
-        } else {
-            $doc->setType($this->getRealType($column));
+	    // Annotation
+	    $doc->setAnnotation('@property');
+
+	    // Type
+	    if ($column->isNullable()) {
+		    $doc->setType($this->getRealType($column) . '|NULL');
+	    } else {
+		    $doc->setType($this->getRealType($column));
+	    }
+
+	    // Variable
+	    $doc->setVariable(Helpers::camelCase($column->getName()));
+
+	    // Defaults
+	    if ($column->getDefault() !== NULL) {
+		    $doc->setDefault($this->getRealDefault($column));
+	    }
+
+	    // Enum
+	    if (!empty($enum = $column->getEnum())) {
+		    $doc->setEnum(Strings::upper($column->getName()));
+	    }
+
+	    // Relations
+	    if (($key = $column->getForeignKey()) !== NULL) {
+		    // Find foreign entity table
+		    $ftable = $column->getTable()->getDatabase()->getForeignTable($key->getReferenceTable());
+
+		    // Update type to Entity name
+		    $doc->setType($this->resolver->resolveEntityName($ftable));
+		    $doc->setRelation($relDoc = new PhpRelDoc());
+
+		    if (($use = $this->getRealUse($ftable, $namespace))) {
+			    $namespace->addUse($use);
+		    }
+
+		    $relDoc->setType('???');
+		    $relDoc->setEntity($this->resolver->resolveEntityName($ftable));
+		    $relDoc->setVariable('???');
+	    }
+
+	    if ($column->isPrimary())
+	    {
+		    $doc->setPrimary(true);
         }
 
-        // Variable
-        $doc->setVariable(Helpers::camelCase($column->getName()));
-
-        // Defaults
-        if ($column->getDefault() !== NULL) {
-            $doc->setDefault($this->getRealDefault($column));
-        }
-
-        // Enum
-        if (!empty($enum = $column->getEnum())) {
-            $doc->setEnum(Strings::upper($column->getName()));
-        }
-
-        // Relations
-        if (($key = $column->getForeignKey()) !== NULL) {
-            // Find foreign entity table
-            $ftable = $column->getTable()->getDatabase()->getForeignTable($key->getReferenceTable());
-
-            // Update type to Entity name
-            $doc->setType($this->resolver->resolveEntityName($ftable));
-            $doc->setRelation($relDoc = new PhpRelDoc());
-
-            if (($use = $this->getRealUse($ftable, $namespace))) {
-                $namespace->addUse($use);
-            }
-
-            $relDoc->setType('???');
-            $relDoc->setEntity($this->resolver->resolveEntityName($ftable));
-            $relDoc->setVariable('???');
-        }
-
-        // Append phpDoc to class
-        $class->addComment((string)$column->getPhpDoc());
+	    // Append phpDoc to class
+	    $class->addComment((string)$column->getPhpDoc());
     }
 
     /**

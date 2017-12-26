@@ -8,10 +8,11 @@ use Minetro\Normgen\Resolver\IEntityResolver;
 use Minetro\Normgen\Resolver\IFacadeResolver;
 use Minetro\Normgen\Resolver\IFilenameResolver;
 use Minetro\Normgen\Resolver\IMapperResolver;
+use Minetro\Normgen\Resolver\IModelResolver;
 use Minetro\Normgen\Resolver\IRepositoryResolver;
 use Minetro\Normgen\Utils\Helpers;
 
-abstract class SimpleResolver implements IEntityResolver, IRepositoryResolver, IMapperResolver, IFacadeResolver
+abstract class SimpleResolver implements IEntityResolver, IRepositoryResolver, IMapperResolver, IFacadeResolver, IModelResolver
 {
 
     /** @var Config */
@@ -58,4 +59,31 @@ abstract class SimpleResolver implements IEntityResolver, IRepositoryResolver, I
     {
         return $this->normalize(ucfirst($table->getName()));
     }
+
+	/**
+	 * @param Table $table
+	 * @return string
+	 */
+	function resolveModelName(Table $table = null)
+	{
+		return $this->config->get('orm.filename.suffix');
+	}
+
+	/**
+	 * @param Table $table
+	 * @return string
+	 */
+	function resolveModelNamespace(Table $table = null)
+	{
+		return $this->config->get('orm.namespace');
+	}
+
+	/**
+	 * @param Table $table
+	 * @return string
+	 */
+	function resolveModelFilename(Table $table = null)
+	{
+		return $this->config->get('orm.filename.suffix') . '.' . IFilenameResolver::PHP_EXT;
+	}
 }

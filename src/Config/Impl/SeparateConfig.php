@@ -17,15 +17,18 @@ class SeparateConfig extends Config
         'generator.generate.repositories' => TRUE,
         'generator.generate.mappers' => TRUE,
         'generator.generate.facades' => TRUE,
-        'generator.entity.exclude.primary' => TRUE,
+        'generator.entity.exclude.primary' => FALSE,
+	    'generator.generate.model' => TRUE,
         // NextrasORM
         'nextras.orm.class.entity' => 'Nextras\Orm\Entity\Entity',
         'nextras.orm.class.repository' => 'Nextras\Orm\Repository\Repository',
         'nextras.orm.class.mapper' => 'Nextras\Orm\Mapper\Mapper',
     	'nextras.orm.class.collection' => 'Nextras\Orm\Collection\ICollection',
         'nextras.orm.class.ientity' => 'Nextras\Orm\Entity\IEntity',
+	    'nextras.orm.class.model' => 'Nextras\Orm\Model\Model',
         // ORM
-        'orm.namespace' => NULL,
+        'orm.namespace' => 'App\Model',
+	    'orm.filename.suffix' => 'Orm',
         // Entity
         'entity.folder' => 'Entity',
         'entity.namespace' => 'App\Model\Entity',

@@ -8,26 +8,28 @@ use Minetro\Normgen\Generator\IGenerator;
 
 class Normgen
 {
-
-    /** @var Config */
+	/** @var Config */
     private $config;
 
-    /** @var IAnalyser */
+	/** @var IAnalyser */
     private $analyser;
 
-    /** @var IGenerator */
+	/** @var IGenerator */
     private $entityGenerator;
 
-    /** @var IGenerator */
+	/** @var IGenerator */
     private $repositoryGenerator;
 
-    /** @var IGenerator */
+	/** @var IGenerator */
     private $mapperGenerator;
 
-    /** @var IGenerator */
+	/** @var IGenerator */
     private $facadeGenerator;
 
-    /**
+    /** @var IGenerator */
+	public $modelGenerator;
+
+	/**
      * @param Config $config
      * @param IAnalyser $analyser
      */
@@ -105,6 +107,22 @@ class Normgen
         $this->facadeGenerator = $generator;
     }
 
+	/**
+	 * @return IGenerator
+	 */
+	public function getModelGenerator()
+	{
+		return $this->modelGenerator;
+    }
+
+	/**
+	 * @param IGenerator $generator
+	 */
+	public function setModelGenerator(IGenerator $generator)
+	{
+		$this->modelGenerator = $generator;
+    }
+
     /**
      * Generate ORM
      */
@@ -121,9 +139,12 @@ class Normgen
         if ($this->config->get('generator.generate.mappers')) {
             $this->mapperGenerator->generate($database);
         }
-        if ($this->config->get('generator.generate.facades')) {
-            $this->facadeGenerator->generate($database);
-        }
+	    if ($this->config->get('generator.generate.facades')) {
+		    $this->facadeGenerator->generate($database);
+	    }
+	    if ($this->config->get('generator.generate.model')) {
+		    $this->modelGenerator->generate($database);
+	    }
     }
 
 }

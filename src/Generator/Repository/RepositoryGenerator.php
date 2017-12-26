@@ -4,7 +4,9 @@ namespace Minetro\Normgen\Generator\Repository;
 
 use Minetro\Normgen\Config\Config;
 use Minetro\Normgen\Entity\Database;
+use Minetro\Normgen\Entity\PhpDoc;
 use Minetro\Normgen\Generator\AbstractGenerator;
+use Minetro\Normgen\Resolver\IModelResolver;
 use Minetro\Normgen\Resolver\IRepositoryResolver;
 use Nette\PhpGenerator\Helpers;
 use Nette\PhpGenerator\PhpNamespace;
@@ -23,19 +25,24 @@ class RepositoryGenerator extends AbstractGenerator
     /** @var IMapperResolver */
     private $mapperResolver;
 
-    /**
-     * @param Config $config
-     * @param IRepositoryResolver $resolver
-     * @param IEntityResolver $entityResolver
-     * @param IMapperResolver $mapperResolver
-     */
-    function __construct(Config $config, IRepositoryResolver $resolver, IEntityResolver $entityResolver, IMapperResolver $mapperResolver)
+    /** @var IModelResolver */
+    public $modelResolver;
+
+	/**
+	 * @param Config $config
+	 * @param IRepositoryResolver $resolver
+	 * @param IEntityResolver $entityResolver
+	 * @param IMapperResolver $mapperResolver
+	 * @param IModelResolver $modelResolver
+	 */
+    function __construct(Config $config, IRepositoryResolver $resolver, IEntityResolver $entityResolver, IMapperResolver $mapperResolver, IModelResolver $modelResolver)
     {
         parent::__construct($config);
 
         $this->resolver = $resolver;
         $this->entityResolver = $entityResolver;
         $this->mapperResolver = $mapperResolver;
+        $this->modelResolver = $modelResolver;
     }
 
     /**
@@ -80,6 +87,12 @@ class RepositoryGenerator extends AbstractGenerator
 			$class->addComment("@method $entityName|NULL persistAndFlush(IEntity " . '$entity'. ", " . '$withCascade' . " = true)");
 			$class->addComment("@method $entityName remove(" . '$entity'. ", " . '$withCascade' . " = true)");
 			$class->addComment("@method $entityName removeAndFlush(" . '$entity'. ", " . '$withCascade' . " = true)");
+
+	        $namespace->addUse($this->modelResolver->resolveModelNamespace($table) . \Minetro\Normgen\Utils\Helpers::NS . $this->modelResolver->resolveModelName($table));
+	        $modelDoc = new PhpDoc();
+	        $modelDoc->setAnnotation("@method");
+	        $modelDoc->setType($this->modelResolver->resolveModelName($table) . " getModel(" . '$need' . " = true)");
+	        $class->addComment((string)$modelDoc);
             
             // Save file
             $this->generateFile($this->resolver->resolveRepositoryFilename($table), (string)$namespace);

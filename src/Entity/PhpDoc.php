@@ -28,6 +28,9 @@ class PhpDoc
     /** @var PhpRelDoc */
     private $relation;
 
+    /** @var bool */
+    public $primary;
+
     /**
      * @return string
      */
@@ -124,6 +127,22 @@ class PhpDoc
         $this->virtual = (bool)$virtual;
     }
 
+	/**
+	 * @return bool
+	 */
+	public function IsPrimary()
+	{
+		return $this->primary;
+    }
+
+	/**
+	 * @param bool $primary
+	 */
+	public function setPrimary($primary)
+	{
+		$this->primary = (bool)$primary;
+    }
+
     /**
      * @return PhpRelDoc
      */
@@ -162,7 +181,9 @@ class PhpDoc
         $b->append($this->type);
 
         // Variable ($..)
-        $b->append(sprintf('$%s', $this->variable));
+	    if ($this->variable !== null) {
+		    $b->append(sprintf('$%s', $this->variable));
+	    }
 
         // Default
         if ($this->default) {
@@ -174,10 +195,15 @@ class PhpDoc
             $b->append(sprintf('{enum self::%s_*}', $this->enum));
         }
 
-        // Virtual
-        if ($this->virtual) {
-            $b->append('{virtual}');
-        }
+	    // Virtual
+	    if ($this->virtual) {
+		    $b->append('{virtual}');
+	    }
+
+	    // Primary
+	    if ($this->primary) {
+		    $b->append('{primary}');
+	    }
 
         // Relation
         if ($this->relation) {
