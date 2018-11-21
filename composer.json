@@ -1,9 +1,9 @@
 {
-  "name": "minetro/normgen",
+  "name": "haxocz/normgen",
   "description": "Nextras ORM Generator",
   "type": "library",
   "license": ["BSD-3-Clause"],
-  "homepage": "https://github.com/minetro/normgen",
+  "homepage": "https://github.com/Haxocz/normgen",
   "authors": [
     {
       "name": "Milan Felix Sulc",
