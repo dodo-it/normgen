@@ -54,6 +54,10 @@ class MapperGenerator extends AbstractGenerator
                 $namespace->addUse($extends);
                 $class->setExtends($extends);
             }
+			$class->addMethod('getTableName')
+				->setBody('return \'' . $table->getName() . '\';')
+				->setReturnType('string')
+				->setVisibility('public');
 
 	        $namespace->addUse($this->repositoryResolver->resolveRepositoryNamespace($table) . \Minetro\Normgen\Utils\Helpers::NS . $this->repositoryResolver->resolveRepositoryName($table));
 	        $repositoryDoc = new PhpDoc();
@@ -68,7 +72,7 @@ class MapperGenerator extends AbstractGenerator
 	        $class->addComment((string)$modelDoc);
 
             // Save file
-            $this->generateFile($this->resolver->resolveMapperFilename($table), (string)$namespace);
+            $this->generateFile($this->resolver->resolveFilename($this->resolver->resolveMapperName($table), $this->config->get('mapper.folder')), (string)$namespace);
         }
 
         // Generate abstract base class

@@ -21,7 +21,7 @@ class RepositoryGenerator extends AbstractGenerator
     
     /** @var IEntityResolver */
     private $entityResolver;
-    
+
     /** @var IMapperResolver */
     private $mapperResolver;
 
@@ -60,10 +60,11 @@ class RepositoryGenerator extends AbstractGenerator
                 $namespace->addUse($extends);
                 $class->setExtends($extends);
             }
-            
+
             $entityName = $this->entityResolver->resolveEntityName($table);
+            $namespace->addUse($this->config->get('entity.namespace') . '\\' . $entityName);
             $class->addMethod("getEntityClassNames")
-				->addComment("@return array")
+				->addComment("@return string[]")
                 ->setReturnType('array')
 				->setVisibility('public')
 				->setStatic(true)
@@ -74,7 +75,7 @@ class RepositoryGenerator extends AbstractGenerator
 			$namespace->addUse($collection);
 			$entity = $this->config->get('nextras.orm.class.ientity');
             $namespace->addUse($entity);
-			
+
 			$class->addComment("@method $mapperName getMapper()");
 			$class->addComment("@method $entityName hydrateEntity(array " . '$data' . ")");
 			$class->addComment("@method $entityName attach(IEntity " . '$entity' . ")");
@@ -94,9 +95,9 @@ class RepositoryGenerator extends AbstractGenerator
 	        $modelDoc->setAnnotation("@method");
 	        $modelDoc->setType($this->modelResolver->resolveModelName($table) . " getModel(" . '$need' . " = true)");
 	        $class->addComment((string)$modelDoc);
-            
+
             // Save file
-            $this->generateFile($this->resolver->resolveRepositoryFilename($table), (string)$namespace);
+            $this->generateFile($this->resolver->resolveFilename($this->resolver->resolveRepositoryName($table), $this->config->get('repository.folder')), (string)$namespace);
         }
 
         // Generate abstract base class
@@ -112,7 +113,7 @@ class RepositoryGenerator extends AbstractGenerator
             $class->setExtends($extends);
 
             // Save file
-            $this->generateFile($this->resolver->resolveFilename(Helpers::extractShortName($this->config->get('repository.extends')), $this->config->get('repository.folder')), (string)$namespace);
+			$this->generateFile($this->resolver->resolveFilename(Helpers::extractShortName($this->config->get('repository.extends')), $this->config->get('repository.folder')), (string)$namespace);
         }
     }
 
