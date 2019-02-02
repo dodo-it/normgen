@@ -2,6 +2,7 @@
 
 namespace Minetro\Normgen\Resolver\Impl;
 
+use Doctrine\Common\Inflector\Inflector;
 use Minetro\Normgen\Entity\Table;
 use Minetro\Normgen\Resolver\IFilenameResolver;
 
@@ -14,6 +15,7 @@ class SimpleSeparateResolver extends SimpleResolver
      */
     public function resolveEntityName(Table $table)
     {
+		return Inflector::singularize(Inflector::classify($table->getName())) . 'Entity';
         return $this->normalize(ucfirst($table->getName()) . $this->config->get('entity.name.suffix'));
     }
 
@@ -32,7 +34,7 @@ class SimpleSeparateResolver extends SimpleResolver
      */
     public function resolveEntityFilename(Table $table)
     {
-        return $this->config->get('entity.folder') . DIRECTORY_SEPARATOR . $this->normalize(ucfirst($table->getName()) . $this->config->get('entity.filename.suffix')) . '.' . IFilenameResolver::PHP_EXT;
+        return $this->config->get('entity.folder') . DIRECTORY_SEPARATOR . $this->resolveEntityName($table) . '.' . IFilenameResolver::PHP_EXT;
     }
 
     /**
@@ -41,6 +43,7 @@ class SimpleSeparateResolver extends SimpleResolver
      */
     public function resolveRepositoryName(Table $table)
     {
+		return Inflector::singularize(Inflector::classify($table->getName())) . 'Repository';
         return $this->normalize(ucfirst($table->getName()) . $this->config->get('repository.name.suffix'));
     }
 
@@ -68,6 +71,7 @@ class SimpleSeparateResolver extends SimpleResolver
      */
     public function resolveMapperName(Table $table)
     {
+		return Inflector::singularize(Inflector::classify($table->getName())) . 'Mapper';
         return $this->normalize(ucfirst($table->getName()) . $this->config->get('mapper.name.suffix'));
     }
 
