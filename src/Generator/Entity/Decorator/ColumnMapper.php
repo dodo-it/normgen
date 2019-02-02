@@ -4,6 +4,7 @@ namespace Minetro\Normgen\Generator\Entity\Decorator;
 
 use Minetro\Normgen\Entity\Column;
 use Minetro\Normgen\Utils\ColumnTypes;
+use Minetro\Normgen\Utils\Helpers;
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\PhpNamespace;
 use Nette\Utils\Strings;
@@ -20,17 +21,20 @@ class ColumnMapper implements IDecorator
     public function doDecorate(Column $column, ClassType $class, PhpNamespace $namespace)
     {
 
+	    $name = Strings::upper('COLUMN_' . $column->getName());
+    	$class->addConstant($name, Helpers::camelCase($column->getName()));
+
         switch ($column->getType()) {
 
             // Map: DateTime
             case ColumnTypes::TYPE_DATETIME:
-                $column->setType('DateTime');
+                $column->setType('DateTimeImmutable');
 
                 if ($column->getDefault() !== NULL) {
                     $column->setDefault('now');
                 }
 
-                $namespace->addUse('Nette\Utils\DateTime');
+                $namespace->addUse('Nextras\Dbal\Utils\DateTimeImmutable');
                 break;
 
             // Map: Enum

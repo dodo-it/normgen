@@ -95,17 +95,12 @@ class EntityGenerator extends AbstractGenerator
                 }
             }
 
+            //Add annotation method
 	        $namespace->addUse($this->repositoryResolver->resolveRepositoryNamespace($table) . \Minetro\Normgen\Utils\Helpers::NS . $this->repositoryResolver->resolveRepositoryName($table));
 	        $repositoryDoc = new PhpDoc();
 	        $repositoryDoc->setAnnotation("@method");
 	        $repositoryDoc->setType($this->repositoryResolver->resolveRepositoryName($table) . " getRepository(" . '$need' . " = true)");
 	        $class->addComment((string)$repositoryDoc);
-
-	        $namespace->addUse($this->modelResolver->resolveModelNamespace($table) . \Minetro\Normgen\Utils\Helpers::NS . $this->modelResolver->resolveModelName($table));
-	        $modelDoc = new PhpDoc();
-	        $modelDoc->setAnnotation("@method");
-	        $modelDoc->setType($this->modelResolver->resolveModelName($table) . " getModel(" . '$need' . " = true)");
-	        $class->addComment((string)$modelDoc);
 
             // Save file
             $this->generateFile($this->resolver->resolveEntityFilename($table), (string)$namespace);
