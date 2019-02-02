@@ -21,7 +21,7 @@ class ColumnMapper implements IDecorator
     public function doDecorate(Column $column, ClassType $class, PhpNamespace $namespace)
     {
 
-	    $name = Strings::upper('COLUMN_' . $column->getName());
+	    $name = Strings::upper('COL_' . $column->getName());
     	$class->addConstant($name, Helpers::camelCase($column->getName()));
 
         switch ($column->getType()) {
