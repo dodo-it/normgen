@@ -59,6 +59,23 @@ class MapperGenerator extends AbstractGenerator
 				->setReturnType('string')
 				->setVisibility('public');
 
+            $primaryCount = 0;
+			foreach ($table->getColumns() as $column) {
+				$primaryCount += (int) $column->isPrimary();
+			}
+			if($primaryCount === 1) {
+				foreach ($table->getColumns() as $column) {
+					if ($column->isPrimary() && $column->getName() != 'id') {
+						$class->addMethod('createStorageReflection')
+							->setVisibility('protected')
+							->addBody('$reflection = parent::createStorageReflection();')
+							->addBody('$reflection->addMapping(\'' . $column->getName() . '\', \'id\');')
+							->addBody('return $reflection;');
+					}
+				}
+			}
+
+
 	        $namespace->addUse($this->repositoryResolver->resolveRepositoryNamespace($table) . \Minetro\Normgen\Utils\Helpers::NS . $this->repositoryResolver->resolveRepositoryName($table));
 	        $repositoryDoc = new PhpDoc();
 	        $repositoryDoc->setAnnotation("@method");

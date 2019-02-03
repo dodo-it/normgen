@@ -84,6 +84,16 @@ class EntityGenerator extends AbstractGenerator
             $class->setExtends($extends);
 
             // Add table columns
+			$primaryCount = 0;
+			foreach ($table->getColumns() as $column) {
+				$primaryCount += (int) $column->isPrimary();
+			}
+			foreach ($table->getColumns() as $column) {
+
+				if (($primaryCount === 1) && $column->isPrimary() && $column->getName() != 'id') {
+					$column->setEntityName('id');
+				}
+			}
             foreach ($table->getColumns() as $column) {
 
                 if ($this->config->get('generator.entity.exclude.primary')) {

@@ -46,6 +46,9 @@ class Column
     /** @var ForeignKey */
     private $foreignKey;
 
+	/** @var string */
+    private $entityName;
+
     /**
      * @param Table $table
      */
@@ -276,5 +279,21 @@ class Column
     {
         $this->foreignKey = $foreignKey;
     }
+
+	/**
+	 * @return string
+	 */
+	public function getEntityName(): string
+	{
+		return $this->entityName ?? $this->name;
+	}
+
+	/**
+	 * @param string $entityName
+	 */
+	public function setEntityName(string $entityName)
+	{
+		$this->entityName = $entityName;
+	}
 
 }

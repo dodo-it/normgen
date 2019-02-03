@@ -49,7 +49,7 @@ class ColumnDocumentor implements IDecorator
 	    }
 
 	    // Variable
-	    $doc->setVariable(Helpers::camelCase($column->getName()));
+	    $doc->setVariable(Helpers::camelCase($column->getEntityName()));
 
 	    // Defaults
 	    if ($column->getDefault() !== NULL) {
