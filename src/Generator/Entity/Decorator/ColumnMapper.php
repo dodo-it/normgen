@@ -22,7 +22,7 @@ class ColumnMapper implements IDecorator
     {
 
 	    $name = Strings::upper('COL_' . $column->getEntityName());
-    	$class->addConstant($name, Helpers::camelCase($column->getName()));
+    	$class->addConstant($name, Helpers::camelCase($column->getEntityName()));
 
         switch ($column->getType()) {
 
